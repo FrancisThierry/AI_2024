@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+
+    <head>
+        <title>Le circuit NAND avec BrainJS</title>
+        <script src="//unpkg.com/brain.js"></script>
+
+        <style>
+            .box {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                width: 200px;
+            }
+
+            .box>*:first-child {
+                align-self: stretch;
+            }
+
+            .box .selected {
+                align-self: center;
+            }
+        </style>
+    </head>
+
+<body>
+
+    <div class="box">
+        <div>
+
+            <h1>Exercice avec BrainJS</h1>
+            <p>
+                On entraine BrainJs à reconnaitre un circuit NAND</p>
+
+            <table width="150" align="left" border="1" cellspacing="0">
+                <caption>Table de vérité NON-ET (<i><span class="lang-en" lang="en">NAND</span></i>)
+                </caption>
+                <tbody>
+                    <tr style="background:#b3e2d1; text-align:center">
+                        <td colspan="2">Entrées</td>
+                        <td>Sortie
+                        </td>
+                    </tr>
+                    <tr style="text-align:center">
+                        <td><b>a</b></td>
+                        <td><b>b</b></td>
+                        <td><b>L</b>
+                        </td>
+                    </tr>
+                    <tr style="text-align:center">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>1
+                        </td>
+                    </tr>
+                    <tr style="text-align:center">
+                        <td>0</td>
+                        <td>1</td>
+                        <td>1
+                        </td>
+                    </tr>
+                    <tr style="text-align:center">
+                        <td>1</td>
+                        <td>0</td>
+                        <td>1
+                        </td>
+                    </tr>
+                    <tr style="text-align:center">
+                        <td>1</td>
+                        <td>1</td>
+                        <td>0
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <div>
+
+
+            <p>
+                Quand la page sera chargée on affichera le résultat de [1, 1] on espère 0
+
+            <h3>Résultat</h3>
+
+            <div id="result"></div>
+
+            </p>
+        </div>
+
+
+    </div>
+</body>
+
+
+<script>
+
+    // provide optional config object (or undefined). Defaults shown.
+    const config = {
+        binaryThresh: 0.5,
+        hiddenLayers: [3], // array of ints for the sizes of the hidden layers in the network
+        activation: 'sigmoid', // supported activation types: ['sigmoid', 'relu', 'leaky-relu', 'tanh'],
+        leakyReluAlpha: 0.01, // supported for activation type 'leaky-relu'
+    };
+
+    // create a simple feed-forward neural network with backpropagation
+    const net = new brain.NeuralNetwork(config);
+
+    // NAND
+    // 0	0	1
+    // 0	1	1
+    // 1	0	1
+    // 1	1	O
+
+    net.train([
+        { input: [0, 0], output: [1] },
+        { input: [0, 1], output: [1] },
+        { input: [1, 0], output: [1] },
+        { input: [1, 1], output: [0] },
+    ]);
+    
+
+    const output = net.run([1, 1]);
+
+    console.log(output)
+
+    document.querySelector("#result").innerHTML = `<p>    ${Math.round(output)}</p>`
+
+</script>
+
+</html>
